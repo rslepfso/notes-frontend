@@ -4,11 +4,14 @@ import axios from "axios";
 import noteService from "./services/notes";
 
 import Note from "./components/Note";
+import Notification from "./components/Notification";
+import Footer from "./components/Footer";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("new note");
   const [showAll, setShowAll] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Some error");
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => setNotes(initialNotes));
@@ -38,7 +41,10 @@ const App = () => {
         setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)))
       )
       .catch((error) => {
-        alert(`The note ${note.content} is non existing`);
+        setErrorMessage(`Note "${note.content}" was already removed`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
         setNotes(notes.filter((note) => note.id !== id));
       });
   };
@@ -52,6 +58,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           Show {showAll ? "Important" : "All"}
@@ -66,6 +73,7 @@ const App = () => {
         <input value={newNote} onChange={handleNoteChange} />
         <button type="submit">Save</button>
       </form>
+      <Footer />
     </div>
   );
 };

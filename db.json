@@ -22,7 +22,7 @@
     },
     {
       "content": "another note",
-      "important": true,
+      "important": false,
       "id": 5
     },
     {
